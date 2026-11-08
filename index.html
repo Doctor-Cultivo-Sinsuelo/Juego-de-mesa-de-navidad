@@ -608,8 +608,8 @@ const CID=localStorage.cid||(localStorage.cid=Math.random().toString(36).slice(2
 let room=null,role=null,myTeam=null,S=null,sig="",rolling=false,zoom=false;
 /* forma canónica: llaves ordenadas, sin nulls, arrays->objetos (Firebase a veces devuelve equipos como array) */
 function canon0(v){if(v&&typeof v==="object"){const o={};Object.keys(v).sort().forEach(k=>{if(v[k]!==null&&v[k]!==undefined)o[k]=canon0(v[k])});return o}return v}
-/* «mostrar respuesta» NO usa campos nuevos (la base los puede rechazar): se codifica en reto.i (+1000) y aquí se decodifica a reto.show */
-function canon(v){const o=canon0(v);const r=o&&o.estado&&o.estado.reto;if(r&&typeof r.i==="number"&&r.i>=1000){r.show=true;r.i%=1000}return o}
+/* «mostrar respuesta» NO usa campos nuevos (la base los puede rechazar): se codifica en reto.i (+50; las reglas de Firebase aceptan i ≤ 99 y cada categoría tiene menos de 50 retos) y aquí se decodifica a reto.show */
+function canon(v){const o=canon0(v);const r=o&&o.estado&&o.estado.reto;if(r&&typeof r.i==="number"&&r.i>=50){r.show=true;r.i%=50}return o}
 async function load(){
   try{ if(DB_URL){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),7000);
       try{const r=await fetch(`${DB_URL}/salas/${room}.json`,{signal:ac.signal,cache:"no-store"});return canon(await r.json());}finally{clearTimeout(tm)}}
@@ -671,7 +671,7 @@ async function poll(){ if(!room)return;
 function showErr(e){let t=document.getElementById("errBox");if(!t){t=document.createElement("div");t.id="errBox";t.style.cssText="position:fixed;left:6px;right:6px;bottom:6px;z-index:120;background:#8f0a1e;color:#fff;font-size:12px;padding:6px 8px;border-radius:8px;pointer-events:none;opacity:.92";document.body.appendChild(t)}
   t.textContent="⚠ Error: "+(e&&e.message||e);clearTimeout(t._h);t._h=setTimeout(()=>t.remove(),9000)}
 window.addEventListener("error",ev=>showErr(ev.message));
-(function(){const v=document.createElement("div");v.textContent="v12";v.style.cssText="position:fixed;right:6px;bottom:3px;z-index:3;font-size:10px;color:#fff;opacity:.35;pointer-events:none";document.body.appendChild(v)})();
+(function(){const v=document.createElement("div");v.textContent="v13";v.style.cssText="position:fixed;right:6px;bottom:3px;z-index:3;font-size:10px;color:#fff;opacity:.35;pointer-events:none";document.body.appendChild(v)})();
 
 /* ===== PANTALLAS ===== */
 const app=document.getElementById("app");
@@ -837,7 +837,7 @@ async function tirar(){
   const fb=simDie(seed+2),c=upFace(fa[fa.length-1].slice(1)),n=upFace(fb[fb.length-1].slice(1))+1;
   await upd({"estado/dado":{c,n,t:Date.now(),eq:t,seed},"estado/reto":{c:cat,i:qi},"estado/bag":bagC,"estado/lastCat":cat,["estado/bq/"+cat]:bagQ,"estado/puedeTirar":false,"estado/rev":null});
 }
-function mostrarResp(){const r=S&&S.estado&&S.estado.reto;if(r&&!r.show)upd({"estado/reto/i":r.i+1000})}
+function mostrarResp(){const r=S&&S.estado&&S.estado.reto;if(r&&!r.show)upd({"estado/reto/i":r.i+50})}
 function acerto(){
   const E=S.estado,t=E.turno,e=eq()[t];if(!t||!e)return;
   // si el juez eligió la categoría a mano (sin tirar dados), se saca el número de casillas al azar (1 a 6)
