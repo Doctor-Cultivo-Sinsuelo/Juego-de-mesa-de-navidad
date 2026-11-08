@@ -607,7 +607,9 @@ const isReto=a=>/(^|[^a-zà-ÿ])(reto|challenge|desafio|défi)([^a-zà-ÿ]|$)/i.
 const CID=localStorage.cid||(localStorage.cid=Math.random().toString(36).slice(2));
 let room=null,role=null,myTeam=null,S=null,sig="",rolling=false,zoom=false;
 /* forma canónica: llaves ordenadas, sin nulls, arrays->objetos (Firebase a veces devuelve equipos como array) */
-function canon(v){if(v&&typeof v==="object"){const o={};Object.keys(v).sort().forEach(k=>{if(v[k]!==null&&v[k]!==undefined)o[k]=canon(v[k])});return o}return v}
+function canon0(v){if(v&&typeof v==="object"){const o={};Object.keys(v).sort().forEach(k=>{if(v[k]!==null&&v[k]!==undefined)o[k]=canon0(v[k])});return o}return v}
+/* «mostrar respuesta» NO usa campos nuevos (la base los puede rechazar): se codifica en reto.i (+1000) y aquí se decodifica a reto.show */
+function canon(v){const o=canon0(v);const r=o&&o.estado&&o.estado.reto;if(r&&typeof r.i==="number"&&r.i>=1000){r.show=true;r.i%=1000}return o}
 async function load(){
   try{ if(DB_URL){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),7000);
       try{const r=await fetch(`${DB_URL}/salas/${room}.json`,{signal:ac.signal,cache:"no-store"});return canon(await r.json());}finally{clearTimeout(tm)}}
@@ -835,7 +837,7 @@ async function tirar(){
   const fb=simDie(seed+2),c=upFace(fa[fa.length-1].slice(1)),n=upFace(fb[fb.length-1].slice(1))+1;
   await upd({"estado/dado":{c,n,t:Date.now(),eq:t,seed},"estado/reto":{c:cat,i:qi},"estado/bag":bagC,"estado/lastCat":cat,["estado/bq/"+cat]:bagQ,"estado/puedeTirar":false,"estado/rev":null});
 }
-function mostrarResp(){if(S&&S.estado&&S.estado.reto)upd({"estado/reto/show":true})}
+function mostrarResp(){const r=S&&S.estado&&S.estado.reto;if(r&&!r.show)upd({"estado/reto/i":r.i+1000})}
 function acerto(){
   const E=S.estado,t=E.turno,e=eq()[t];if(!t||!e)return;
   // si el juez eligió la categoría a mano (sin tirar dados), se saca el número de casillas al azar (1 a 6)
