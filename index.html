@@ -808,7 +808,7 @@ function retoHTML(juez){
   return `<div class="qcard"><div class="qhd"><span class="qcat">${catName(r.c)}</span>${tmrHTML()}</div><div class="qtxt">${q}</div>${juez?`<div class="ans">${tr("answer")}${a}</div>`:""}${QDECO}</div>`;
 }
 function teamSlot(){const E=S.estado,r=E.reto; // en el cel del equipo la pregunta vive en la tarjeta grande; aquí solo un renglón de altura fija (el tablero no salta)
-  return `<div class="qslot" style="--qh:96px">`+(r?`<div class="row"><button class="y" onclick="qfullShow()">${tr("viewQ")} · ${catName(r.c)}</button></div>`:revelaHTML()+`<div class="big">${tr("waiting")}</div>`)+`</div>`}
+  return `<div class="qslot" style="--qh:130px">`+(r?`<div class="row"><button class="y" onclick="qfullShow()">${tr("viewQ")} · ${catName(r.c)}</button></div>`:revelaHTML()+`<div class="big">${tr("waiting")}</div>`)+`</div>`}
 function qfullShow(){QFS.hid=false;QFS.until=0;qfullSync()}
 function retoRev(juez){const rv=revelaHTML();return S.estado.reto?retoHTML(juez)+rv:rv+retoHTML(juez)} // sin reto: la respuesta va ARRIBA de «Esperando reto…»
 function revelaHTML(){
@@ -819,7 +819,7 @@ function revelaHTML(){
 }
 function dadoHTML(){
   const d=S.estado.dado;
-  return `<div id="diceSlot"></div>${d&&d.c!==undefined?`<div class="big">${catName(CATIDS.indexOf(FACE_IDS[d.c]))} · ${tr("advance",d.n)}</div>`:""}`;
+  return `<div id="diceSlot"></div><div style="min-height:46px">${d&&d.c!==undefined?`<div class="big">${catName(CATIDS.indexOf(FACE_IDS[d.c]))} · ${tr("advance",d.n)}</div>`:""}</div>`;
 }
 function turnoBanner(){const tt=S.estado.turno;return tt?`<div class="turn" style="--c:${COLORS[tt]}">${eq()[tt]?avH(eq()[tt].av,46):""}<span>${tr("turnOf",tt)}</span></div>`:`<div class="big">${tr("waitTeams")}</div>`}
 
@@ -949,11 +949,11 @@ function draw(force){
       const n=+mine[0],me=mine[1],mi=E.turno===n;
       h+=`<div class="row"><span class="badge" style="background:${COLORS[n]};font-size:18px">${avH(me.av,28)} ${tr("teamPos",n,me.pos,LAST)}</span></div>
       ${E.ganador?`<div class="card big">🏆 ${tr("won",E.ganador)} <div style="font-size:16px;color:#ffe27a;margin-top:6px">${tr("sing")}</div></div>`:""}
-      ${turnoBanner()}${E.mover&&E.mover.eq===n?`<div class="card big" style="background:#f5b800;color:#222">${E.efecto&&E.efecto.eq===E.mover.eq&&E.efecto.to===E.mover.to?(E.efecto.to>E.efecto.from?tr("efUp",E.efecto.to-E.efecto.from):tr("efDn",E.efecto.from-E.efecto.to)):tr("hit",E.mover.to)}<br><small style="opacity:1;font-size:15px">${tr("dragHint")}</small></div>`:""}${E.mover&&E.mover.eq===n?boardHTML()+revelaHTML():teamSlot()}
+      ${turnoBanner()}${E.mover&&E.mover.eq===n?`<div class="qslot" style="--qh:130px"><div class="card big" style="background:#f5b800;color:#222">${E.efecto&&E.efecto.eq===E.mover.eq&&E.efecto.to===E.mover.to?(E.efecto.to>E.efecto.from?tr("efUp",E.efecto.to-E.efecto.from):tr("efDn",E.efecto.from-E.efecto.to)):tr("hit",E.mover.to)}<br><small style="opacity:1;font-size:15px">${tr("dragHint")}</small></div></div>`:teamSlot()}
       <div class="row"><button class="y" style="font-size:20px;padding:16px 28px" ${mi&&E.puedeTirar&&!E.ganador?"":"disabled"} onclick="tirar()">${tr("roll")}</button></div>
-      ${(mi&&E.puedeTirar&&!E.ganador)||E.ganador?"":`<div class="row"><small>${!mi?tr("wait1",E.turno):tr("wait2")}</small></div>`}
-      ${dadoHTML()}${efectoHTML()}
-      ${E.mover&&E.mover.eq===n?"":boardHTML()}${standings()}
+      <div class="row" style="min-height:26px">${(mi&&E.puedeTirar&&!E.ganador)||E.ganador?"":`<small>${!mi?tr("wait1",E.turno):tr("wait2")}</small>`}</div>
+      ${dadoHTML()}
+      ${boardHTML()}${efectoHTML()}${E.mover&&E.mover.eq===n?revelaHTML():""}${standings()}
       <details class="card"><summary>${tr("changeAv")}</summary>${pickScreen()}</details>
       <details class="card"><summary>🌐 ${tr("lang")}</summary>${langRow()}</details>`;
     }
@@ -962,7 +962,7 @@ function draw(force){
   const w=document.getElementById("wrap"); if(w){w.scrollLeft=sx;w.scrollTop=sy;} if(zoomFocus){zoomFocus=false;focusTok()}
   if(role==="juez")qr();
   efectoToast(E);diceSync(E);initDrag();celebrar(E);tmrTick();qfullSync();
-  if(role==="equipo"&&E.mover&&eq()[E.mover.eq]&&eq()[E.mover.eq].id===CID){const k=E.mover.eq+":"+E.mover.to;if(moveScrollKey!==k){moveScrollKey=k;setTimeout(()=>{const w=document.getElementById("wrap");if(w)w.scrollIntoView({behavior:"smooth",block:"center"})},150)}}else if(!E.mover)moveScrollKey="";
+  if(role==="equipo"&&E.mover&&eq()[E.mover.eq]&&eq()[E.mover.eq].id===CID){const k=E.mover.eq+":"+E.mover.to;if(moveScrollKey!==k){moveScrollKey=k}}else if(!E.mover)moveScrollKey="";
 }
 function waShare(){
   if(!location.origin||location.origin==="null"){alert(tr("waNeed"));return}
