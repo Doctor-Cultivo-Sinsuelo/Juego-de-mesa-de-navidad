@@ -861,11 +861,11 @@ let finMoving=false,efSeen=0,efKey=0;
 async function finMove(mm,extra){
   const E=S.estado,m=(mm&&mm.eq)?mm:E.mover;if(!m||finMoving)return;finMoving=true;
   try{
-    const t=m.eq,ts=teams(),nx=m.nx||ts.find(x=>x>t)||ts[0],p2=m.fx?m.to:applyEffect(t,m.to);
+    const t=m.eq,ts=teams(),f0=E.efecto,fx=!!(f0&&f0.eq===t&&f0.to===m.to&&f0.from!==m.to),nx=(fx&&f0.nx)||ts.find(x=>x>t)||ts[0],p2=fx?m.to:applyEffect(t,m.to);
     const base={"estado/mover":null,"estado/dado":null,"estado/reto":null,...(extra||{})};
     if(p2>=LAST){await upd({...base,["equipos/"+t+"/pos"]:p2,"estado/ganador":t,"estado/turno":nx,"estado/puedeTirar":true});return;}
     if(p2!==m.to){ // casilla especial: se queda en el aro, se avisa, y el equipo arrastra otra vez hasta la nueva casilla
-      await upd({...base,["equipos/"+t+"/pos"]:m.to,"estado/puedeTirar":false,"estado/efecto":{eq:t,from:m.to,to:p2,nx,t:Date.now()},"estado/mover":{eq:t,to:p2,fx:1,nx}});
+      await upd({...base,["equipos/"+t+"/pos"]:m.to,"estado/puedeTirar":false,"estado/efecto":{eq:t,from:m.to,to:p2,nx,t:Date.now()},"estado/mover":{eq:t,to:p2}});
       return;
     }
     await upd({...base,["equipos/"+t+"/pos"]:p2,"estado/efecto":null,"estado/turno":nx,"estado/puedeTirar":true});
@@ -949,7 +949,7 @@ function draw(force){
       const n=+mine[0],me=mine[1],mi=E.turno===n;
       h+=`<div class="row"><span class="badge" style="background:${COLORS[n]};font-size:18px">${avH(me.av,28)} ${tr("teamPos",n,me.pos,LAST)}</span></div>
       ${E.ganador?`<div class="card big">🏆 ${tr("won",E.ganador)} <div style="font-size:16px;color:#ffe27a;margin-top:6px">${tr("sing")}</div></div>`:""}
-      ${turnoBanner()}${E.mover&&E.mover.eq===n?`<div class="card big" style="background:#f5b800;color:#222">${E.mover.fx&&E.efecto?(E.efecto.to>E.efecto.from?tr("efUp",E.efecto.to-E.efecto.from):tr("efDn",E.efecto.from-E.efecto.to)):tr("hit",E.mover.to)}<br><small style="opacity:1;font-size:15px">${tr("dragHint")}</small></div>`:""}${E.mover&&E.mover.eq===n?boardHTML()+revelaHTML():teamSlot()}
+      ${turnoBanner()}${E.mover&&E.mover.eq===n?`<div class="card big" style="background:#f5b800;color:#222">${E.efecto&&E.efecto.eq===E.mover.eq&&E.efecto.to===E.mover.to?(E.efecto.to>E.efecto.from?tr("efUp",E.efecto.to-E.efecto.from):tr("efDn",E.efecto.from-E.efecto.to)):tr("hit",E.mover.to)}<br><small style="opacity:1;font-size:15px">${tr("dragHint")}</small></div>`:""}${E.mover&&E.mover.eq===n?boardHTML()+revelaHTML():teamSlot()}
       <div class="row"><button class="y" style="font-size:20px;padding:16px 28px" ${mi&&E.puedeTirar&&!E.ganador?"":"disabled"} onclick="tirar()">${tr("roll")}</button></div>
       ${(mi&&E.puedeTirar&&!E.ganador)||E.ganador?"":`<div class="row"><small>${!mi?tr("wait1",E.turno):tr("wait2")}</small></div>`}
       ${dadoHTML()}${efectoHTML()}
