@@ -122,6 +122,26 @@ h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
 .qcard .qcat{display:inline-block;background:linear-gradient(#fff8e1,#ffe9b0);color:#a30b18;font-weight:700;border-radius:999px;padding:3px 14px;font-size:15px;box-shadow:0 2px 6px #0006}
 .qcard .qtxt{font-family:'Lobster','Fredoka',cursive;font-weight:400;font-size:clamp(23px,6.4vw,32px);line-height:1.22;margin:12px 4px 4px;color:#fff;text-shadow:0 2px 3px #6a1022,0 0 12px #6a102288}
 .qcard .ans{margin:10px 0 0}
+
+/* --- tarjeta a pantalla completa en el cel del equipo --- */
+#qfull{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:64px 22px 38vh;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(130% 90% at 50% 0,#ee2a35,#c40f1e 58%,#8f0914);color:#fff;animation:qfin .45s cubic-bezier(.2,1.3,.4,1)}
+@keyframes qfin{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+#qfull>.qdeco{position:absolute;inset:0;pointer-events:none}
+#qfull>*:not(.qdeco){position:relative;z-index:2}
+#qfull .qdeco .gift{width:clamp(70px,22vw,110px);height:clamp(70px,22vw,110px);top:-6px;right:-6px}
+#qfull .qdeco .scene{width:min(640px,100%);bottom:50px}
+#qfull .qdeco .snow{height:84px;bottom:-14px}
+#qfull .qcat{font-size:clamp(18px,5vw,26px);padding:5px 20px;background:linear-gradient(#fff8e1,#ffe9b0);color:#a30b18;font-weight:700;border-radius:999px;box-shadow:0 3px 8px #0006}
+#qfull .tmr{margin-top:12px;font-size:clamp(24px,7vw,36px);padding:4px 20px;color:#fff;background:#0005;border:2px solid #fff8;opacity:1}
+#qfull .tmr.off{opacity:.55;font-size:22px}
+#qfull .tmr.warn{color:#ffe27a;background:#000a;border-color:#ffe27a}
+#qfull .tmr.end{color:#a30b18;background:#fff;border-color:#fff}
+#qfull .qbig{font-family:'Lobster','Fredoka',cursive;font-size:clamp(30px,9.2vw,56px);line-height:1.18;margin:clamp(14px,3.5vh,32px) 0 0;max-width:640px;color:#fff;text-shadow:0 3px 4px #6a1022,0 0 18px #6a1022aa}
+#qfull .qclose{position:absolute!important;z-index:5!important;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#ffffffd9;color:#a30b18;border:0;border-radius:999px;padding:7px 18px;font-weight:700;font-size:14px;margin:0}
+#qfull .fall{position:absolute;top:-24px;color:#fff;opacity:.8;pointer-events:none;animation:qfall linear infinite}
+@keyframes qfall{to{transform:translateY(112vh) rotate(260deg)}}
+@media(prefers-reduced-motion:reduce){#qfull .fall{animation:none;top:20%}#qfull{animation:none}}
+@media (orientation:landscape) and (max-height:620px){#qfull{padding:44px 20px 20px}#qfull .qdeco .scene,#qfull .qdeco .snow{display:none}#qfull .qbig{font-size:clamp(22px,5.2vw,36px);margin-top:8px}#qfull .tmr{margin-top:6px;font-size:22px}#qfull .qclose{bottom:6px}}
 /* decoración navideña de la tarjeta */
 .qcard>.qdeco{position:absolute;inset:0;z-index:1;pointer-events:none}
 .qdeco .gift{position:absolute;top:-4px;right:-4px;width:54px;height:54px;transform:rotate(8deg);filter:drop-shadow(0 2px 3px #0005)}
@@ -290,7 +310,7 @@ es:{
  code4:"Escribe el código de 4 letras",noRoom:"No encuentro esa sala",taken:"Ese equipo ya está ocupado",
  pickTeam:"1) Elige tu equipo",team:n=>`Equipo ${n}`,busy:" (ocupado)",pickAv:"2) Elige tu avatar",ready:"¡Listo, entrar!",teamAbbr:"E",
  zoomOut:"Ver completo",zoomIn:"Acercar",square:(p,l)=>`casilla ${p}/${l}`,
- waiting:"Esperando reto…",answer:"Respuesta: ",right:"✅ ¡Respuesta correcta!",wasAns:"❌ La respuesta era",fun:"💡 Dato curioso: ",
+ waiting:"Esperando reto…",seeBoard:"Ver tablero ▾",answer:"Respuesta: ",right:"✅ ¡Respuesta correcta!",wasAns:"❌ La respuesta era",fun:"💡 Dato curioso: ",
  advance:n=>`avanza ${n}`,turnOf:n=>`Turno del Equipo ${n}`,waitTeams:"Esperando equipos…",
  toast:(mine,e,up,n)=>`${mine?"¡Tu equipo":"¡Equipo "+e} ${up?"avanza":"regresa"} ${n} casilla${n>1?"s":""}!`,
  spUp:"¡Casilla especial a tu favor!",spDn:"¡Casilla especial! Mala suerte…",goesTo:n=>`Pasa a la casilla ${n}.`,
@@ -321,7 +341,7 @@ en:{
  code4:"Enter the 4-letter code",noRoom:"I can't find that room",taken:"That team is already taken",
  pickTeam:"1) Pick your team",team:n=>`Team ${n}`,busy:" (taken)",pickAv:"2) Pick your avatar",ready:"Ready, let's go!",teamAbbr:"T",
  zoomOut:"Show full board",zoomIn:"Zoom in",square:(p,l)=>`square ${p}/${l}`,
- waiting:"Waiting for a challenge…",answer:"Answer: ",right:"✅ Correct answer!",wasAns:"❌ The answer was",fun:"💡 Fun fact: ",
+ waiting:"Waiting for a challenge…",seeBoard:"See board ▾",answer:"Answer: ",right:"✅ Correct answer!",wasAns:"❌ The answer was",fun:"💡 Fun fact: ",
  advance:n=>`move ${n}`,turnOf:n=>`Team ${n}'s turn`,waitTeams:"Waiting for teams…",
  toast:(mine,e,up,n)=>`${mine?"Your team":"Team "+e} ${up?"moves forward":"goes back"} ${n} square${n>1?"s":""}!`,
  spUp:"Special square in your favor!",spDn:"Special square! Bad luck…",goesTo:n=>`Move to square ${n}.`,
@@ -352,7 +372,7 @@ pt:{
  code4:"Digite o código de 4 letras",noRoom:"Não encontro essa sala",taken:"Essa equipe já está ocupada",
  pickTeam:"1) Escolha sua equipe",team:n=>`Equipe ${n}`,busy:" (ocupada)",pickAv:"2) Escolha seu avatar",ready:"Pronto, entrar!",teamAbbr:"E",
  zoomOut:"Ver completo",zoomIn:"Aproximar",square:(p,l)=>`casa ${p}/${l}`,
- waiting:"Esperando desafio…",answer:"Resposta: ",right:"✅ Resposta correta!",wasAns:"❌ A resposta era",fun:"💡 Curiosidade: ",
+ waiting:"Esperando desafio…",seeBoard:"Ver tabuleiro ▾",answer:"Resposta: ",right:"✅ Resposta correta!",wasAns:"❌ A resposta era",fun:"💡 Curiosidade: ",
  advance:n=>`avança ${n}`,turnOf:n=>`Vez da Equipe ${n}`,waitTeams:"Esperando equipes…",
  toast:(mine,e,up,n)=>`${mine?"Sua equipe":"A equipe "+e} ${up?"avança":"volta"} ${n} casa${n>1?"s":""}!`,
  spUp:"Casa especial a seu favor!",spDn:"Casa especial! Má sorte…",goesTo:n=>`Vá para a casa ${n}.`,
@@ -383,7 +403,7 @@ fr:{
  code4:"Écris le code de 4 lettres",noRoom:"Je ne trouve pas cette salle",taken:"Cette équipe est déjà prise",
  pickTeam:"1) Choisis ton équipe",team:n=>`Équipe ${n}`,busy:" (prise)",pickAv:"2) Choisis ton avatar",ready:"Prêt, on entre !",teamAbbr:"É",
  zoomOut:"Voir tout",zoomIn:"Zoom",square:(p,l)=>`case ${p}/${l}`,
- waiting:"En attente d'un défi…",answer:"Réponse : ",right:"✅ Bonne réponse !",wasAns:"❌ La réponse était",fun:"💡 Le saviez-vous : ",
+ waiting:"En attente d'un défi…",seeBoard:"Voir le plateau ▾",answer:"Réponse : ",right:"✅ Bonne réponse !",wasAns:"❌ La réponse était",fun:"💡 Le saviez-vous : ",
  advance:n=>`avance de ${n}`,turnOf:n=>`Tour de l'Équipe ${n}`,waitTeams:"En attente des équipes…",
  toast:(mine,e,up,n)=>`${mine?"Ton équipe":"L'équipe "+e} ${up?"avance":"recule"} de ${n} case${n>1?"s":""} !`,
  spUp:"Case spéciale en ta faveur !",spDn:"Case spéciale ! Pas de chance…",goesTo:n=>`Va à la case ${n}.`,
@@ -750,6 +770,26 @@ const QDECO=`<div class="qdeco" aria-hidden="true">
 <path d="M180 84c18 6 50 6 92 0 12-2 18-8 14-14" fill="none" stroke="#e8c46a" stroke-width="3" stroke-linecap="round"/>
 <path d="M196 80v-6M226 82v-6M256 80v-6" stroke="#e8c46a" stroke-width="2"/></g>
 </svg></div>`;
+
+/* ===== TARJETA A PANTALLA COMPLETA (solo celulares de equipo; el juez conserva su vista con botones) ===== */
+const QFS={key:"",dt:0,at:0,hid:false,tm:null};
+function qfullSync(){
+  const E=S&&S.estado,r=E&&E.reto;let el=document.getElementById("qfull");
+  const mine=role!=="juez"&&room&&E&&Object.values(eq()||{}).some(v=>v.id===CID);
+  if(!r||!mine||E.ganador){if(el)el.remove();QFS.key="";clearTimeout(QFS.tm);return}
+  const dt=(E.dado&&E.dado.t)||0,k=r.c+":"+r.i+":"+dt;
+  if(k!==QFS.key){const fresh=dt&&dt!==QFS.dt;QFS.key=k;QFS.dt=dt;QFS.at=fresh?Date.now():0;QFS.hid=false;if(el){el.remove();el=null}}
+  if(QFS.hid)return;
+  const wait=3300-(Date.now()-QFS.at); // deja ver rodar el dado antes de tapar la pantalla
+  if(QFS.at&&wait>0){clearTimeout(QFS.tm);QFS.tm=setTimeout(qfullSync,wait);return}
+  if(el)return;
+  const [q]=RET(r.c,r.i);
+  el=document.createElement("div");el.id="qfull";
+  const fl=Array.from({length:14},(_,i)=>`<span class="fall" style="left:${(i*37+11)%96}%;font-size:${10+(i*5)%14}px;animation-duration:${6+(i*3)%7}s;animation-delay:-${(i*2)%9}s">❄</span>`).join("");
+  el.innerHTML=QDECO+fl+`<div class="qhd"><span class="qcat">${catName(r.c)}</span></div>${tmrHTML()}<div class="qbig">${q}</div><button class="qclose" onclick="qfullHide()">${tr("seeBoard")}</button>`;
+  document.body.appendChild(el);tmrTick();
+}
+function qfullHide(){QFS.hid=true;const e=document.getElementById("qfull");if(e)e.remove()}
 function retoHTML(juez){
   const r=S.estado.reto; if(!r)return `<div class="big">${tr("waiting")}</div>`;
   const [q,a]=RET(r.c,r.i);
@@ -859,7 +899,7 @@ function draw(force){
   if(dragging&&Date.now()-dragT>6000)dragging=false;
   if(dragging)return;
   const s=JSON.stringify(S); if(!force&&s===sig)return; sig=s;
-  if(!room){home();return;}
+  if(!room){qfullSync();home();return;}
   const keep=document.getElementById("wrap"); const sx=keep?keep.scrollLeft:0, sy=keep?keep.scrollTop:0;
   if(!S||!S.estado){app.innerHTML=tr("loading");return;}
   const rl=(S.estado&&S.estado.lang)||S.lang; // idioma que fijó el juez
@@ -903,7 +943,7 @@ function draw(force){
   app.innerHTML=h;
   const w=document.getElementById("wrap"); if(w){w.scrollLeft=sx;w.scrollTop=sy;} if(zoomFocus){zoomFocus=false;focusTok()}
   if(role==="juez")qr();
-  efectoToast(E);diceSync(E);initDrag();celebrar(E);tmrTick();
+  efectoToast(E);diceSync(E);initDrag();celebrar(E);tmrTick();qfullSync();
   if(role==="equipo"&&E.mover&&eq()[E.mover.eq]&&eq()[E.mover.eq].id===CID){const k=E.mover.eq+":"+E.mover.to;if(moveScrollKey!==k){moveScrollKey=k;setTimeout(()=>{const w=document.getElementById("wrap");if(w)w.scrollIntoView({behavior:"smooth",block:"center"})},150)}}else if(!E.mover)moveScrollKey="";
 }
 function waShare(){
@@ -1151,18 +1191,18 @@ function musicBtn(){const b=document.getElementById("musicBtn");if(!b)return;b.t
 document.addEventListener("visibilitychange",()=>{if(document.hidden)musicStop();else if(MU.on&&MU.ctx)musicStart()});
 /* ===== CRONÓMETRO: cuenta atrás casual por pregunta. Toca el chip: 30 s → 60 s → apagado ===== */
 const TM={O:[30,60,0],i:(()=>{try{const v=+localStorage.tmrI;return v>=0&&v<3?v:0}catch(_){return 0}})(),key:"",t0:0,done:false};
-function tmrHTML(){return '<span id="tmr" class="tmr" onclick="tmrTap()" role="timer"></span>'}
+function tmrHTML(){return '<span class="tmr" onclick="tmrTap()" role="timer"></span>'}
 function tmrTap(){TM.i=(TM.i+1)%3;try{localStorage.tmrI=TM.i}catch(_){}TM.t0=Date.now();TM.done=false;tmrTick()}
 function tmrDing(){try{if(MU.on&&MU.ctx&&MU.ctx.state==="running"){const t=MU.ctx.currentTime;mNote(mf(84),t,.4,.2);mNote(mf(79),t+.2,.5,.18)}}catch(_){}}
 function tmrTick(){
   const r=S&&S.estado&&S.estado.reto;if(!r){TM.key="";return} // sin pregunta: se rearma para la siguiente
-  const el=document.getElementById("tmr");if(!el)return;
+  const els=document.querySelectorAll(".tmr");if(!els.length)return;
   const k=r.c+":"+r.i;if(k!==TM.key){TM.key=k;TM.t0=Date.now();TM.done=false} // cada equipo cuenta con su propio reloj (sin depender de relojes ajenos)
   const D=TM.O[TM.i];
-  if(!D){el.className="tmr off";el.textContent="⏱";return}
+  if(!D){els.forEach(el=>{el.className="tmr off";el.textContent="⏱"});return}
   const left=Math.max(0,D-Math.floor((Date.now()-TM.t0)/1000));
-  el.textContent="⏱ "+Math.floor(left/60)+":"+String(left%60).padStart(2,"0");
-  el.className="tmr"+(left===0?" end":left<=10?" warn":"");
+  els.forEach(el=>{el.textContent="⏱ "+Math.floor(left/60)+":"+String(left%60).padStart(2,"0");
+  el.className="tmr"+(left===0?" end":left<=10?" warn":"")});
   if(left===0&&!TM.done){TM.done=true;tmrDing()}
 }
 setInterval(tmrTick,250);
