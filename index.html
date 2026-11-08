@@ -117,10 +117,17 @@ button.y{background:linear-gradient(#fff08a,#ffb300)}
 h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
 
 /* --- tarjeta de pregunta, dato curioso y reglas --- */
-.qcard{position:relative;margin:12px 0;padding:16px 14px 14px;border-radius:20px;border:3px solid var(--gold);background:linear-gradient(160deg,#fff8e1,#ffe9b0);color:#3a1a08;text-align:center;box-shadow:0 0 0 3px #6a1022,0 10px 26px #000a;animation:pop .5s cubic-bezier(.2,1.5,.4,1)}
-.qcard .qcat{display:inline-block;background:linear-gradient(#ff5468,#c8102e);color:#fff;font-weight:700;border-radius:999px;padding:3px 14px;font-size:15px;box-shadow:0 2px 6px #0006}
-.qcard .qtxt{font-size:clamp(20px,5.4vw,28px);font-weight:700;line-height:1.25;margin:10px 4px 4px}
+.qcard{position:relative;overflow:hidden;margin:12px 0;padding:16px 14px 112px;border-radius:20px;border:3px solid var(--gold);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(120% 90% at 50% 0,#e8232f,#c40f1e 60%,#a30b18);color:#fff;text-align:center;box-shadow:0 0 0 3px #6a1022,0 10px 26px #000a;animation:pop .5s cubic-bezier(.2,1.5,.4,1)}
+.qcard>*{position:relative;z-index:2}
+.qcard .qcat{display:inline-block;background:linear-gradient(#fff8e1,#ffe9b0);color:#a30b18;font-weight:700;border-radius:999px;padding:3px 14px;font-size:15px;box-shadow:0 2px 6px #0006}
+.qcard .qtxt{font-family:'Lobster','Fredoka',cursive;font-weight:400;font-size:clamp(23px,6.4vw,32px);line-height:1.22;margin:12px 4px 4px;color:#fff;text-shadow:0 2px 3px #6a1022,0 0 12px #6a102288}
 .qcard .ans{margin:10px 0 0}
+/* decoración navideña de la tarjeta */
+.qcard>.qdeco{position:absolute;inset:0;z-index:1;pointer-events:none}
+.qdeco .gift{position:absolute;top:-4px;right:-4px;width:54px;height:54px;transform:rotate(8deg);filter:drop-shadow(0 2px 3px #0005)}
+.qdeco .fl{position:absolute;color:#fff;opacity:.85;line-height:1;text-shadow:0 0 6px #fff8}
+.qdeco .scene{position:absolute;left:50%;bottom:8px;width:min(270px,88%);height:auto;transform:translateX(-50%);filter:drop-shadow(0 3px 3px #0004)}
+.qdeco .snow{position:absolute;left:-6%;right:-6%;bottom:-14px;height:34px;background:linear-gradient(#fff,#dcecff 60%,#bcd8f5);border-radius:50% 50% 0 0/100% 100% 0 0;box-shadow:0 -2px 8px #fff6}
 /* cronómetro discreto junto a la categoría */
 .qhd{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
 .tmr{display:inline-flex;align-items:center;gap:3px;padding:2px 10px;border-radius:999px;font-weight:600;font-size:14px;line-height:1.4;font-variant-numeric:tabular-nums;color:#5a2a0a;background:#3a1a0812;border:1.5px solid #3a1a0830;cursor:pointer;user-select:none;-webkit-user-select:none;opacity:.8;transition:background .3s,color .3s,opacity .3s}
@@ -143,9 +150,10 @@ h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
 /* --- compacto + modo horizontal --- */
 #app{padding:6px}
 #diceSlot{max-width:min(200px,46vw)}
-.qcard{margin:8px 0;padding:10px 10px 8px;border-radius:16px;border-width:2px}
+.qcard{margin:8px 0;padding:10px 10px 100px;border-radius:16px;border-width:2px}
+.qdeco .gift{width:42px;height:42px}
 .qcard .qcat{font-size:13px;padding:2px 11px}
-.qcard .qtxt{font-size:clamp(15px,4.2vw,20px);margin:6px 2px 2px}
+.qcard .qtxt{font-size:clamp(19px,5.2vw,25px);margin:8px 2px 2px}
 .qcard .ans{font-size:14px;padding:5px 8px;margin:6px 0 0}
 .revela{margin:8px 0;padding:8px 10px;border-radius:14px;border-width:2px}
 .revela .rt{font-size:15px}
@@ -162,8 +170,9 @@ h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
   .badge{font-size:14px!important}
   .card{padding:8px;margin:5px 0;border-radius:14px}
   .big{font-size:16px}
-  .qcard{margin:4px 0;padding:6px 8px 6px}
-  .qcard .qtxt{font-size:clamp(14px,2.5vw,17px);margin:4px 2px 0}
+  .qcard{margin:4px 0;padding:6px 8px 8px}
+  .qdeco .scene,.qdeco .snow{display:none}
+  .qcard .qtxt{font-size:clamp(17px,2.8vw,21px);margin:4px 2px 0}
   .qcard .qcat{font-size:12px}
   .revela{margin:4px 0;padding:6px 8px}
   .revela .rt{font-size:14px}.revela .dato{font-size:13px;padding:6px}
@@ -720,10 +729,31 @@ function focusTok(){const w=document.getElementById("wrap"),k=document.getElemen
 function standings(){
   return `<div class="hud">${teams().map(n=>{const e=eq()[n];return `<div class="pl${S.estado.turno===n?" on":""}" style="--c:${COLORS[n]}">${avH(e.av,46)}<div style="flex:1"><b>${tr("team",n)}</b><div class="bar"><i style="width:${Math.round((e.pos||0)/LAST*100)}%"></i></div><small>${tr("square",e.pos||0,LAST)}</small></div></div>`}).join("")}</div>`;
 }
+const QDECO=`<div class="qdeco" aria-hidden="true">
+<svg class="gift" viewBox="0 0 60 60"><rect x="8" y="22" width="44" height="32" rx="3" fill="#fff"/><rect x="8" y="22" width="44" height="9" rx="2" fill="#f1f1f1"/><rect x="26" y="22" width="8" height="32" fill="#c8102e"/><rect x="8" y="34" width="44" height="7" fill="#c8102e"/><path d="M30 22C20 6 8 14 18 22ZM30 22C40 6 52 14 42 22Z" fill="#e0182d" stroke="#8d0a1a" stroke-width="1.5"/><circle cx="30" cy="22" r="4" fill="#a30b18"/></svg>
+<span class="fl" style="left:8%;top:44%;font-size:14px">❄</span><span class="fl" style="right:7%;top:36%;font-size:20px;opacity:.7">❄</span><span class="fl" style="left:20%;top:12%;font-size:11px;opacity:.6">❄</span><span class="fl" style="right:22%;top:58%;font-size:12px;opacity:.6">❄</span>
+<div class="snow"></div>
+<svg class="scene" viewBox="0 0 300 92">
+<rect x="56" y="78" width="9" height="10" fill="#6b3b1b"/>
+<polygon points="60,34 82,62 38,62" fill="#1f6b3a"/><polygon points="60,22 80,46 40,46" fill="#237a42"/><polygon points="60,50 90,82 30,82" fill="#175a30"/><polygon points="60,12 76,34 44,34" fill="#2a8a4c"/>
+<polygon points="60,2 62.5,8.5 69,8.5 63.8,12.5 65.7,19 60,15 54.3,19 56.2,12.5 51,8.5 57.5,8.5" fill="#ffd54a" stroke="#c99a1a" stroke-width=".6"/>
+<circle cx="52" cy="40" r="3" fill="#c8102e"/><circle cx="68" cy="56" r="3" fill="#ffd54a"/><circle cx="48" cy="68" r="3" fill="#3b8fd9"/><circle cx="72" cy="72" r="3" fill="#c8102e"/><circle cx="58" cy="28" r="2.4" fill="#ffd54a"/><circle cx="64" cy="46" r="2.4" fill="#3b8fd9"/><circle cx="56" cy="58" r="2.4" fill="#ffd54a"/>
+<g><rect x="92" y="66" width="22" height="20" rx="2" fill="#2f9a55"/><rect x="101" y="66" width="4" height="20" fill="#c8102e"/><rect x="92" y="74" width="22" height="4" fill="#c8102e"/><path d="M103 66c-7-8-12-2-7 0ZM103 66c7-8 12-2 7 0Z" fill="#c8102e"/></g>
+<g><rect x="116" y="72" width="18" height="15" rx="2" fill="#e8c46a"/><rect x="123" y="72" width="4" height="15" fill="#c8102e"/><rect x="116" y="78" width="18" height="3.5" fill="#c8102e"/></g>
+<g><circle cx="158" cy="76" r="13" fill="#fff"/><circle cx="158" cy="56" r="10" fill="#fff"/><circle cx="158" cy="41" r="8" fill="#fff"/>
+<rect x="150" y="30" width="16" height="3" rx="1" fill="#1b1b1b"/><rect x="153" y="19" width="10" height="12" fill="#1b1b1b"/>
+<path d="M149 47c6 4 14 4 20 0l1 5c-7 4-15 4-22 0Z" fill="#c8102e"/><rect x="164" y="49" width="5" height="12" rx="2" fill="#c8102e"/>
+<circle cx="155" cy="40" r="1.2" fill="#222"/><circle cx="161" cy="40" r="1.2" fill="#222"/><polygon points="158,42 166,44 158,46" fill="#ff8a1f"/>
+<circle cx="158" cy="58" r="1.3" fill="#222"/><circle cx="158" cy="65" r="1.3" fill="#222"/></g>
+<g><path d="M186 58c0 12 6 22 30 22h50c8 0 14-8 12-26-8 4-14 4-22 4-16 0-24-6-36-6-10 0-20 0-34 6Z" fill="#7a0c1a" stroke="#f2cf7a" stroke-width="2"/>
+<path d="M190 60c10-4 20-4 30 0 10 4 20 8 36 8" fill="none" stroke="#ff6b78" stroke-width="2"/>
+<path d="M180 84c18 6 50 6 92 0 12-2 18-8 14-14" fill="none" stroke="#e8c46a" stroke-width="3" stroke-linecap="round"/>
+<path d="M196 80v-6M226 82v-6M256 80v-6" stroke="#e8c46a" stroke-width="2"/></g>
+</svg></div>`;
 function retoHTML(juez){
   const r=S.estado.reto; if(!r)return `<div class="big">${tr("waiting")}</div>`;
   const [q,a]=RET(r.c,r.i);
-  return `<div class="qcard"><div class="qhd"><span class="qcat">${catName(r.c)}</span>${tmrHTML()}</div><div class="qtxt">❓ ${q}</div>${juez?`<div class="ans">${tr("answer")}${a}</div>`:""}</div>`;
+  return `<div class="qcard"><div class="qhd"><span class="qcat">${catName(r.c)}</span>${tmrHTML()}</div><div class="qtxt">${q}</div>${juez?`<div class="ans">${tr("answer")}${a}</div>`:""}${QDECO}</div>`;
 }
 function retoRev(juez){const rv=revelaHTML();return S.estado.reto?retoHTML(juez)+rv:rv+retoHTML(juez)} // sin reto: la respuesta va ARRIBA de «Esperando reto…»
 function revelaHTML(){
