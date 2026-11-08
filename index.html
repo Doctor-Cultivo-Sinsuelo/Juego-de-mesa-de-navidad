@@ -132,6 +132,9 @@ h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
 #qfull .qdeco .scene{width:min(640px,100%);bottom:50px}
 #qfull .qdeco .snow{height:84px;bottom:-14px}
 #qfull .qcat{font-size:clamp(18px,5vw,26px);padding:5px 20px;background:linear-gradient(#fff8e1,#ffe9b0);color:#a30b18;font-weight:700;border-radius:999px;box-shadow:0 3px 8px #0006}
+#qfull .qhd{gap:10px}
+#qfull .qnum{display:inline-block;background:linear-gradient(#ffe27a,#f0a800);color:#3a2600;font-weight:800;border-radius:999px;padding:4px 16px;font-size:clamp(20px,5.6vw,30px);box-shadow:0 3px 8px #0006}
+#qfull .qadv{margin-top:8px;font-weight:700;font-size:clamp(15px,4.2vw,21px);color:#ffe9b0;text-shadow:0 2px 3px #6a1022}
 #qfull .tmr{margin-top:12px;font-size:clamp(24px,7vw,36px);padding:4px 20px;color:#fff;background:#0005;border:2px solid #fff8;opacity:1}
 #qfull .tmr.off{opacity:.55;font-size:22px}
 #qfull .tmr.warn{color:#ffe27a;background:#000a;border-color:#ffe27a}
@@ -174,6 +177,7 @@ h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
 /* --- compacto + modo horizontal --- */
 #app{padding:6px}
 #diceSlot{max-width:min(200px,46vw)}
+.qslot{min-height:var(--qh,0px)}
 .qcard{margin:8px 0;padding:10px 10px 100px;border-radius:16px;border-width:2px}
 .qdeco .gift{width:42px;height:42px}
 .qcard .qcat{font-size:13px;padding:2px 11px}
@@ -314,7 +318,7 @@ es:{
  code4:"Escribe el código de 4 letras",noRoom:"No encuentro esa sala",taken:"Ese equipo ya está ocupado",
  pickTeam:"1) Elige tu equipo",team:n=>`Equipo ${n}`,busy:" (ocupado)",pickAv:"2) Elige tu avatar",ready:"¡Listo, entrar!",teamAbbr:"E",
  zoomOut:"Ver completo",zoomIn:"Acercar",square:(p,l)=>`casilla ${p}/${l}`,
- waiting:"Esperando reto…",seeBoard:"Ver tablero ▾",showAns:"📢 Mostrar respuesta",answer:"Respuesta: ",right:"✅ ¡Respuesta correcta!",wasAns:"❌ La respuesta era",fun:"💡 Dato curioso: ",
+ waiting:"Esperando reto…",seeBoard:"Ver tablero ▾",showAns:"📢 Mostrar respuesta",viewQ:"❓ Ver pregunta",advN:n=>`Si aciertan avanzan ${n} casilla${n>1?"s":""}`,shown:"✅ Respuesta mostrada",answer:"Respuesta: ",right:"✅ ¡Respuesta correcta!",wasAns:"❌ La respuesta era",fun:"💡 Dato curioso: ",
  advance:n=>`avanza ${n}`,turnOf:n=>`Turno del Equipo ${n}`,waitTeams:"Esperando equipos…",
  toast:(mine,e,up,n)=>`${mine?"¡Tu equipo":"¡Equipo "+e} ${up?"avanza":"regresa"} ${n} casilla${n>1?"s":""}!`,
  spUp:"¡Casilla especial a tu favor!",spDn:"¡Casilla especial! Mala suerte…",goesTo:n=>`Pasa a la casilla ${n}.`,
@@ -345,7 +349,7 @@ en:{
  code4:"Enter the 4-letter code",noRoom:"I can't find that room",taken:"That team is already taken",
  pickTeam:"1) Pick your team",team:n=>`Team ${n}`,busy:" (taken)",pickAv:"2) Pick your avatar",ready:"Ready, let's go!",teamAbbr:"T",
  zoomOut:"Show full board",zoomIn:"Zoom in",square:(p,l)=>`square ${p}/${l}`,
- waiting:"Waiting for a challenge…",seeBoard:"See board ▾",showAns:"📢 Show answer",answer:"Answer: ",right:"✅ Correct answer!",wasAns:"❌ The answer was",fun:"💡 Fun fact: ",
+ waiting:"Waiting for a challenge…",seeBoard:"See board ▾",showAns:"📢 Show answer",viewQ:"❓ See question",advN:n=>`Get it right and advance ${n} square${n>1?"s":""}`,shown:"✅ Answer shown",answer:"Answer: ",right:"✅ Correct answer!",wasAns:"❌ The answer was",fun:"💡 Fun fact: ",
  advance:n=>`move ${n}`,turnOf:n=>`Team ${n}'s turn`,waitTeams:"Waiting for teams…",
  toast:(mine,e,up,n)=>`${mine?"Your team":"Team "+e} ${up?"moves forward":"goes back"} ${n} square${n>1?"s":""}!`,
  spUp:"Special square in your favor!",spDn:"Special square! Bad luck…",goesTo:n=>`Move to square ${n}.`,
@@ -376,7 +380,7 @@ pt:{
  code4:"Digite o código de 4 letras",noRoom:"Não encontro essa sala",taken:"Essa equipe já está ocupada",
  pickTeam:"1) Escolha sua equipe",team:n=>`Equipe ${n}`,busy:" (ocupada)",pickAv:"2) Escolha seu avatar",ready:"Pronto, entrar!",teamAbbr:"E",
  zoomOut:"Ver completo",zoomIn:"Aproximar",square:(p,l)=>`casa ${p}/${l}`,
- waiting:"Esperando desafio…",seeBoard:"Ver tabuleiro ▾",showAns:"📢 Mostrar resposta",answer:"Resposta: ",right:"✅ Resposta correta!",wasAns:"❌ A resposta era",fun:"💡 Curiosidade: ",
+ waiting:"Esperando desafio…",seeBoard:"Ver tabuleiro ▾",showAns:"📢 Mostrar resposta",viewQ:"❓ Ver pergunta",advN:n=>`Se acertarem, avançam ${n} casa${n>1?"s":""}`,shown:"✅ Resposta mostrada",answer:"Resposta: ",right:"✅ Resposta correta!",wasAns:"❌ A resposta era",fun:"💡 Curiosidade: ",
  advance:n=>`avança ${n}`,turnOf:n=>`Vez da Equipe ${n}`,waitTeams:"Esperando equipes…",
  toast:(mine,e,up,n)=>`${mine?"Sua equipe":"A equipe "+e} ${up?"avança":"volta"} ${n} casa${n>1?"s":""}!`,
  spUp:"Casa especial a seu favor!",spDn:"Casa especial! Má sorte…",goesTo:n=>`Vá para a casa ${n}.`,
@@ -407,7 +411,7 @@ fr:{
  code4:"Écris le code de 4 lettres",noRoom:"Je ne trouve pas cette salle",taken:"Cette équipe est déjà prise",
  pickTeam:"1) Choisis ton équipe",team:n=>`Équipe ${n}`,busy:" (prise)",pickAv:"2) Choisis ton avatar",ready:"Prêt, on entre !",teamAbbr:"É",
  zoomOut:"Voir tout",zoomIn:"Zoom",square:(p,l)=>`case ${p}/${l}`,
- waiting:"En attente d'un défi…",seeBoard:"Voir le plateau ▾",showAns:"📢 Montrer la réponse",answer:"Réponse : ",right:"✅ Bonne réponse !",wasAns:"❌ La réponse était",fun:"💡 Le saviez-vous : ",
+ waiting:"En attente d'un défi…",seeBoard:"Voir le plateau ▾",showAns:"📢 Montrer la réponse",viewQ:"❓ Voir la question",advN:n=>`Si vous réussissez, avancez de ${n} case${n>1?"s":""}`,shown:"✅ Réponse montrée",answer:"Réponse : ",right:"✅ Bonne réponse !",wasAns:"❌ La réponse était",fun:"💡 Le saviez-vous : ",
  advance:n=>`avance de ${n}`,turnOf:n=>`Tour de l'Équipe ${n}`,waitTeams:"En attente des équipes…",
  toast:(mine,e,up,n)=>`${mine?"Ton équipe":"L'équipe "+e} ${up?"avance":"recule"} de ${n} case${n>1?"s":""} !`,
  spUp:"Case spéciale en ta faveur !",spDn:"Case spéciale ! Pas de chance…",goesTo:n=>`Va à la case ${n}.`,
@@ -671,7 +675,7 @@ async function poll(){ if(!room)return;
 function showErr(e){let t=document.getElementById("errBox");if(!t){t=document.createElement("div");t.id="errBox";t.style.cssText="position:fixed;left:6px;right:6px;bottom:6px;z-index:120;background:#8f0a1e;color:#fff;font-size:12px;padding:6px 8px;border-radius:8px;pointer-events:none;opacity:.92";document.body.appendChild(t)}
   t.textContent="⚠ Error: "+(e&&e.message||e);clearTimeout(t._h);t._h=setTimeout(()=>t.remove(),9000)}
 window.addEventListener("error",ev=>showErr(ev.message));
-(function(){const v=document.createElement("div");v.textContent="v13";v.style.cssText="position:fixed;right:6px;bottom:3px;z-index:3;font-size:10px;color:#fff;opacity:.35;pointer-events:none";document.body.appendChild(v)})();
+(function(){const v=document.createElement("div");v.textContent="v14";v.style.cssText="position:fixed;right:6px;bottom:3px;z-index:3;font-size:10px;color:#fff;opacity:.35;pointer-events:none";document.body.appendChild(v)})();
 
 /* ===== PANTALLAS ===== */
 const app=document.getElementById("app");
@@ -778,22 +782,23 @@ const QDECO=`<div class="qdeco" aria-hidden="true">
 </svg></div>`;
 
 /* ===== TARJETA A PANTALLA COMPLETA (solo celulares de equipo; el juez conserva su vista con botones) ===== */
-const QFS={key:"",dt:0,at:0,hid:false,tm:null};
+const QFS={key:"",dt:0,until:0,hid:false,tm:null};let DICE_END=0; // DICE_END: cuándo termina de rodar el dado (lo fija rollTo)
 function qfullSync(){
   const E=S&&S.estado,r=E&&E.reto;let el=document.getElementById("qfull");
   const mine=role!=="juez"&&room&&E&&Object.values(eq()||{}).some(v=>v.id===CID);
   if(!r||E.mover||!mine||E.ganador){if(el)el.remove();QFS.key="";clearTimeout(QFS.tm);return}
   const dt=(E.dado&&E.dado.t)||0,k=r.c+":"+r.i+":"+dt+":"+(r.show?1:0);
-  if(k!==QFS.key){const fresh=dt&&dt!==QFS.dt;QFS.key=k;QFS.dt=dt;QFS.at=fresh?Date.now():0;QFS.hid=false;if(el){el.remove();el=null}}
+  if(k!==QFS.key){const fresh=dt&&dt!==QFS.dt;QFS.key=k;QFS.dt=dt;QFS.until=fresh?(DICE_END>Date.now()?DICE_END:(dice?0:Date.now()+3300)):0;QFS.hid=false;if(el){el.remove();el=null}}
   if(QFS.hid)return;
-  const wait=3300-(Date.now()-QFS.at); // deja ver rodar el dado antes de tapar la pantalla
-  if(QFS.at&&wait>0){clearTimeout(QFS.tm);QFS.tm=setTimeout(qfullSync,wait);return}
+  const wait=QFS.until-Date.now(); // espera a que el dado termine de rodar y caer; luego sale la tarjeta de golpe
+  if(wait>0){clearTimeout(QFS.tm);QFS.tm=setTimeout(qfullSync,wait+30);return}
   if(el)return;
   const [q,a,d]=RET(r.c,r.i);
   el=document.createElement("div");el.id="qfull";
   const fl=Array.from({length:14},(_,i)=>`<span class="fall" style="left:${(i*37+11)%96}%;font-size:${10+(i*5)%14}px;animation-duration:${6+(i*3)%7}s;animation-delay:-${(i*2)%9}s">❄</span>`).join("");
   const rv=r.show?(isReto(a)?"":`<div class="qans">${tr("answer")}<b>${a}</b></div>`)+(d?`<div class="qdato">${tr("fun")}${d}</div>`:""):"";
-  el.innerHTML=QDECO+fl+`<div class="qhd"><span class="qcat">${catName(r.c)}</span></div>${r.show?"":tmrHTML()}<div class="qbig${r.show?" sm":""}">${q}</div>${rv}<button class="qclose" onclick="qfullHide()">${tr("seeBoard")}</button>`;
+  const dd=E.dado,nn=dd&&dd.n&&dd.eq===E.turno?dd.n:0;
+  el.innerHTML=QDECO+fl+`<div class="qhd"><span class="qcat">${catName(r.c)}</span>${nn?`<span class="qnum">${FACES[nn-1]} ${nn}</span>`:""}</div>${nn&&!r.show?`<div class="qadv">${tr("advN",nn)}</div>`:""}${r.show?"":tmrHTML()}<div class="qbig${r.show?" sm":""}">${q}</div>${rv}<button class="qclose" onclick="qfullHide()">${tr("seeBoard")}</button>`;
   document.body.appendChild(el);tmrTick();
 }
 function qfullHide(){QFS.hid=true;const e=document.getElementById("qfull");if(e)e.remove()}
@@ -802,6 +807,9 @@ function retoHTML(juez){
   const [q,a]=RET(r.c,r.i);
   return `<div class="qcard"><div class="qhd"><span class="qcat">${catName(r.c)}</span>${tmrHTML()}</div><div class="qtxt">${q}</div>${juez?`<div class="ans">${tr("answer")}${a}</div>`:""}${QDECO}</div>`;
 }
+function teamSlot(){const E=S.estado,r=E.reto; // en el cel del equipo la pregunta vive en la tarjeta grande; aquí solo un renglón de altura fija (el tablero no salta)
+  return `<div class="qslot" style="--qh:96px">`+(r?`<div class="row"><button class="y" onclick="qfullShow()">${tr("viewQ")} · ${catName(r.c)}</button></div>`:revelaHTML()+`<div class="big">${tr("waiting")}</div>`)+`</div>`}
+function qfullShow(){QFS.hid=false;QFS.until=0;qfullSync()}
 function retoRev(juez){const rv=revelaHTML();return S.estado.reto?retoHTML(juez)+rv:rv+retoHTML(juez)} // sin reto: la respuesta va ARRIBA de «Esperando reto…»
 function revelaHTML(){
   const v=S.estado.rev; if(!v||!RETOS.es[CATIDS[v.c]]||!RETOS.es[CATIDS[v.c]][v.i])return "";
@@ -843,18 +851,18 @@ function acerto(){
   // si el juez eligió la categoría a mano (sin tirar dados), se saca el número de casillas al azar (1 a 6)
   const n=(E.dado&&E.dado.eq===t&&E.dado.n)?E.dado.n:(1+Math.floor(Math.random()*6));
   const r=E.reto,rev=r?{c:r.c,i:r.i,ok:true}:null;
-  upd({"estado/mover":{eq:t,to:Math.min(LAST,(e.pos||0)+n)},"estado/puedeTirar":false,"estado/rev":rev});
+  finMove({eq:t,to:Math.min(LAST,(e.pos||0)+n)},{"estado/rev":rev}); // el avatar se mueve solo a la casilla
 }
 function fallo(){
   const ts=teams();if(!ts.length)return;const E=S.estado,t=E.turno,n=ts.find(x=>x>t)||ts[0],r=E.reto;
   upd({"estado/turno":n,"estado/reto":null,"estado/dado":null,"estado/mover":null,"estado/puedeTirar":true,"estado/rev":r?{c:r.c,i:r.i,ok:false}:null});
 }
 let finMoving=false,efSeen=0,efKey=0;
-async function finMove(){
-  const E=S.estado,m=E.mover;if(!m||finMoving)return;finMoving=true;
+async function finMove(mm,extra){
+  const E=S.estado,m=(mm&&mm.eq)?mm:E.mover;if(!m||finMoving)return;finMoving=true;
   try{
     const t=m.eq,p2=applyEffect(t,m.to),ts=teams(),nx=ts.find(x=>x>t)||ts[0];
-    const base={"estado/mover":null,"estado/dado":null,"estado/reto":null};
+    const base={"estado/mover":null,"estado/dado":null,"estado/reto":null,...(extra||{})};
     if(p2>=LAST){await upd({...base,["equipos/"+t+"/pos"]:p2,"estado/ganador":t,"estado/turno":nx,"estado/puedeTirar":true});return;}
     if(p2!==m.to){ // casilla especial: primero se queda en el aro, se avisa, y luego se mueve
       await upd({...base,["equipos/"+t+"/pos"]:m.to,"estado/puedeTirar":false,"estado/efecto":{eq:t,from:m.to,to:p2,nx,t:Date.now()}});
@@ -922,10 +930,9 @@ function draw(force){
     <div class="card"><div class="row"><small>🌐 ${tr("lang")}</small></div>${langRow()}</div>
     ${E.ganador?`<div class="card big">🏆 ${tr("won",E.ganador)} <div style="font-size:16px;color:#ffe27a;margin-top:6px">${tr("sing")}</div> <button class="y" onclick="upd({'estado/ganador':null,'estado/reto':null,'estado/dado':null,'estado/mover':null,'estado/efecto':null,'estado/puedeTirar':true,'estado/bag':null,'estado/bq':null,'estado/lastCat':null,'equipos':Object.fromEntries(teams().map(n=>[n,{...eq()[n],pos:0}]))})">${tr("reset")}</button></div>`:""}
     ${turnoBanner()}${E.mover?`<div class="card big" style="background:#f5b800;color:#222">${tr("moveInfo",E.mover.eq,E.mover.to)}</div>`:""}
-    <div class="card">${retoRev(true)}
-     <div class="row"><button class="y" ${E.reto&&!E.reto.show&&!E.mover?"":"disabled"} onclick="mostrarResp()">${tr("showAns")}</button>
+    <div class="card"><div class="qslot" style="--qh:150px">${retoRev(true)}</div>
+     <div class="row"><button class="y" ${E.reto&&!E.reto.show&&!E.mover?"":"disabled"} onclick="mostrarResp()">${E.reto&&E.reto.show?tr("shown"):tr("showAns")}</button>
       <button class="g" ${E.reto&&!E.puedeTirar&&E.turno&&!E.mover?"":"disabled"} onclick="acerto()">${tr("ok")}</button>
-     <button class="y" ${E.mover?"":"disabled"} onclick="finMove()">${tr("moveFor")}</button>
      <button class="s" onclick="fallo()">${tr("fail")}</button>
      <button class="s" ${E.reto&&!E.mover?"":"disabled"} onclick="otra()">${tr("another")}</button></div>
      <details style="margin-top:6px"><summary><small>${tr("manualCat")}</small></summary><div class="row">${CATIDS.map((id,i)=>`<button onclick="pedir(${i})">${catName(i)}</button>`).join("")}</div></details></div>
@@ -940,7 +947,7 @@ function draw(force){
       const n=+mine[0],me=mine[1],mi=E.turno===n;
       h+=`<div class="row"><span class="badge" style="background:${COLORS[n]};font-size:18px">${avH(me.av,28)} ${tr("teamPos",n,me.pos,LAST)}</span></div>
       ${E.ganador?`<div class="card big">🏆 ${tr("won",E.ganador)} <div style="font-size:16px;color:#ffe27a;margin-top:6px">${tr("sing")}</div></div>`:""}
-      ${turnoBanner()}${E.mover&&E.mover.eq===n?`<div class="card big" style="background:#f5b800;color:#222">${tr("hit",E.mover.to)}<br><small style="opacity:1;font-size:15px">${tr("dragHint")}</small></div>`:""}${E.mover&&E.mover.eq===n?boardHTML()+revelaHTML():retoRev(false)}
+      ${turnoBanner()}${E.mover&&E.mover.eq===n?`<div class="card big" style="background:#f5b800;color:#222">${tr("hit",E.mover.to)}<br><small style="opacity:1;font-size:15px">${tr("dragHint")}</small></div>`:""}${E.mover&&E.mover.eq===n?boardHTML()+revelaHTML():teamSlot()}
       <div class="row"><button class="y" style="font-size:20px;padding:16px 28px" ${mi&&E.puedeTirar&&!E.ganador?"":"disabled"} onclick="tirar()">${tr("roll")}</button></div>
       ${(mi&&E.puedeTirar&&!E.ganador)||E.ganador?"":`<div class="row"><small>${!mi?tr("wait1",E.turno):tr("wait2")}</small></div>`}
       ${dadoHTML()}${efectoHTML()}
@@ -1118,7 +1125,7 @@ function rollTo(c,n,anim,seed){
   const {a,b}=dice;
   const fin=()=>{a.quaternion.copy(QF[c]);b.quaternion.copy(QF[n-1]);a.position.y=b.position.y=1.25;dice.draw()};
   if(!anim||!seed){fin();return}
-  const fa=simDie(seed+1),fb=simDie(seed+2),t0=performance.now();
+  const fa=simDie(seed+1),fb=simDie(seed+2),t0=performance.now();DICE_END=Date.now()+fa.length*16.667+250;
   (function f(){const i=Math.max(0,Math.min(fa.length-1,Math.floor((performance.now()-t0)/16.667))),j=Math.min(fb.length-1,i),A=fa[i],B=fb[j];
     a.position.y=A[0];a.quaternion.set(A[1],A[2],A[3],A[4]);b.position.y=B[0];b.quaternion.set(B[1],B[2],B[3],B[4]);dice.draw();
     if(i<fa.length-1)requestAnimationFrame(f);else{const la=fa[fa.length-1],lb=fb[fb.length-1];if(upFace(la.slice(1))!==c||upFace(lb.slice(1))!==n-1)fin()}})();
