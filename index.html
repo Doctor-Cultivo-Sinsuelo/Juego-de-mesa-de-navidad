@@ -27,7 +27,7 @@ button.av{background:linear-gradient(#ffffff30,#ffffff10);border:2px solid #fff4
 button.av.on{background:linear-gradient(#ffffff55,#ffffff22);border-color:#fff;box-shadow:0 0 0 3px #fff,0 0 16px 4px #ffe27a}
 #wrap{overflow:auto;border-radius:16px;border:3px solid var(--gold);box-shadow:0 0 0 3px #6a1022,0 10px 30px #000a}
 #board{position:relative;width:100%;min-width:100%}
-#board img{display:block;width:100%;filter:saturate(1.3) contrast(1.07) brightness(1.04)}
+#board img{display:block;width:100%;height:auto;aspect-ratio:1406/2149;filter:saturate(1.3) contrast(1.07) brightness(1.04)}
 .tk,.tk *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .tk{position:absolute;width:7.4%;aspect-ratio:60/84;transform:translate(-50%,-54%);transition:left .8s,top .8s;z-index:2}
 .bulb{display:inline-block;vertical-align:middle;flex:none;color:var(--c)}
@@ -254,7 +254,7 @@ h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
 /* --- PINO: tablero sin marco, adornos como fichas, foco de inicio que prende y apaga --- */
 #wrap{border:none;box-shadow:none;background:none;border-radius:0}
 #board{container-type:inline-size}
-#board img{filter:none}
+#board img{filter:none;height:auto!important}
 .tk{width:8.6%;aspect-ratio:1;transform:translate(-50%,-50%)}
 .orn{display:inline-block}
 .orn img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 4%;animation:swing 2.8s ease-in-out infinite alternate;filter:drop-shadow(0 0 4px var(--c)) drop-shadow(0 2px 3px #000a)}
