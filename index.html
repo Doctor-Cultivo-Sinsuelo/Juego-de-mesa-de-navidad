@@ -789,9 +789,10 @@ async function load(){
       try{const r=await fetch(`${DB_URL}/salas/${room}.json`,{signal:ac.signal,cache:"no-store"});return canon(await r.json());}finally{clearTimeout(tm)}}
   return canon(JSON.parse(localStorage.getItem("sala_"+room)||"null"));}catch(e){return S}
 }
-let noRev=false,noOpt=false;
+let noRev=false,noOpt=false,noEf=false,upSt=0; // noEf = la base rechazó «estado/efecto»; upSt = último código HTTP de error
 const OPTK=k=>/^estado\/(bag|lastCat|bq(\/.*)?)$/.test(k);
-async function upd(o){
+async function upd(o,quiet){
+  let upOk=true;upSt=0;
   if(DB_URL){
     if(noRev)delete o["estado/rev"];
     const send=async body=>{const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),9000);
@@ -807,13 +808,14 @@ async function upd(o){
       const tries=[];if(hasO)tries.push([true,false]);if(hasR)tries.push([false,true]);if(hasO&&hasR)tries.push([true,true]);
       for(const [po,pr] of tries){const r2=await send(without(po,pr));if(r2.ok){r=r2;if(po)noOpt=true;if(pr)noRev=true;break}}
     }
-    if(!r.ok)showErr("No se pudo guardar ("+r.st+") "+String(r.t).slice(0,120));
+    upOk=r.ok;if(!r.ok){upSt=r.st;if(!quiet)showErr("No se pudo guardar ("+r.st+") "+String(r.t).slice(0,120))}
   }
   else{const d=JSON.parse(localStorage.getItem("sala_"+room)||"{}");
     for(const k in o){const ps=k.split("/");let n=d;for(let i=0;i<ps.length-1;i++)n=n[ps[i]]=n[ps[i]]||{};
       if(o[k]===null)delete n[ps.at(-1)];else n[ps.at(-1)]=o[k];}
     localStorage.setItem("sala_"+room,JSON.stringify(d));}
   S=await load();draw(true);
+  return upOk;
 }
 /* ===== STREAMING: Firebase manda solo los cambios (SSE). Así 50 celulares no hacen 40 peticiones por segundo ===== */
 let es=null,esCur=null,esLast=0,esRoom=null;
@@ -845,7 +847,7 @@ async function poll(){ if(!room)return;
 function showErr(e){let t=document.getElementById("errBox");if(!t){t=document.createElement("div");t.id="errBox";t.style.cssText="position:fixed;left:6px;right:6px;bottom:6px;z-index:120;background:#8f0a1e;color:#fff;font-size:12px;padding:6px 8px;border-radius:8px;pointer-events:none;opacity:.92";document.body.appendChild(t)}
   t.textContent="⚠ Error: "+(e&&e.message||e);clearTimeout(t._h);t._h=setTimeout(()=>t.remove(),9000)}
 window.addEventListener("error",ev=>showErr(ev.message));
-(function(){const v=document.createElement("div");v.textContent="v15";v.style.cssText="position:fixed;right:6px;bottom:3px;z-index:3;font-size:10px;color:#fff;opacity:.35;pointer-events:none";document.body.appendChild(v)})();
+(function(){const v=document.createElement("div");v.textContent="v17";v.style.cssText="position:fixed;right:6px;bottom:3px;z-index:3;font-size:10px;color:#fff;opacity:.35;pointer-events:none";document.body.appendChild(v)})();
 
 /* ===== PANTALLAS ===== */
 const app=document.getElementById("app");
@@ -1053,9 +1055,11 @@ async function finMove(mm,extra){
     const t=m.eq,ts=teams(),f0=E.efecto,fx=!!(f0&&f0.eq===t&&f0.to===m.to&&f0.from!==m.to),nx=(fx&&f0.nx)||ts.find(x=>x>t)||ts[0],p2=fx?m.to:applyEffect(t,m.to);
     const base={"estado/mover":null,"estado/dado":null,"estado/reto":null,...(extra||{})};
     if(p2>=LAST){await upd({...base,["equipos/"+t+"/pos"]:p2,"estado/ganador":t,"estado/turno":nx,"estado/puedeTirar":true});return;}
-    if(p2!==m.to){ // casilla especial: se queda en el aro, se avisa, y el equipo arrastra otra vez hasta la nueva casilla
-      await upd({...base,["equipos/"+t+"/pos"]:m.to,"estado/puedeTirar":false,"estado/efecto":{eq:t,from:m.to,to:p2,nx,t:Date.now()},"estado/mover":{eq:t,to:p2}});
-      return;
+    if(p2!==m.to&&!noEf){ // casilla especial: se queda en el aro, se avisa, y el equipo arrastra otra vez hasta la nueva casilla
+      const ok=await upd({...base,["equipos/"+t+"/pos"]:m.to,"estado/puedeTirar":false,"estado/efecto":{eq:t,from:m.to,to:p2,nx,t:Date.now()},"estado/mover":{eq:t,to:p2}},true);
+      if(ok)return;
+      // la base rechazó «efecto» (reglas de Firebase): NO se traba el juego, el salto se aplica directo con la escritura normal de abajo
+      if(upSt>=400){noEf=true;console.warn("Firebase rechazó estado/efecto ("+upSt+"): los saltos de casillas especiales se aplican directo")}
     }
     await upd({...base,["equipos/"+t+"/pos"]:p2,"estado/efecto":null,"estado/turno":nx,"estado/puedeTirar":true});
   }finally{finMoving=false}
@@ -1099,7 +1103,12 @@ function nextTurn(){const ts=teams();if(!ts.length)return;const t=S.estado.turno
   upd({"estado/turno":n,"estado/reto":null,"estado/dado":null,"estado/mover":null,"estado/puedeTirar":true});}
 function pedir(c){const [qi,bq]=qBag(S.estado,c);upd({"estado/reto":{c,i:qi},["estado/bq/"+c]:bq,"estado/puedeTirar":false,"estado/rev":null});}
 function otra(){const r=S.estado.reto;if(r)pedir(r.c)}
-function ajustar(n,d){const e=eq()[n];upd({["equipos/"+n+"/pos"]:Math.max(0,Math.min(LAST,e.pos+d))});}
+const JUEZ_KEY="pino2024"; // debe ser IGUAL a la clave que está en las reglas de Firebase
+async function ajustar(n,d){ // corrección manual del juez (puede retroceder): manda la clave junto con la posición y luego la borra
+  const e=eq()[n];if(!e)return;
+  const ok=await upd({["equipos/"+n+"/pos"]:Math.max(0,Math.min(LAST,(e.pos||0)+d)),"estado/ajuste":JUEZ_KEY});
+  await upd({"estado/ajuste":null},true);
+}
 
 let dragT=0;
 function draw(force){
