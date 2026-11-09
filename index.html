@@ -27,7 +27,7 @@ button.av{background:linear-gradient(#ffffff30,#ffffff10);border:2px solid #fff4
 button.av.on{background:linear-gradient(#ffffff55,#ffffff22);border-color:#fff;box-shadow:0 0 0 3px #fff,0 0 16px 4px #ffe27a}
 #wrap{overflow:auto;border-radius:16px;border:3px solid var(--gold);box-shadow:0 0 0 3px #6a1022,0 10px 30px #000a}
 #board{position:relative;width:100%;min-width:100%}
-#board img{display:block;width:100%;height:auto;aspect-ratio:1406/2149;filter:saturate(1.3) contrast(1.07) brightness(1.04)}
+#board img{display:block;width:100%;filter:saturate(1.3) contrast(1.07) brightness(1.04)}
 .tk,.tk *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .tk{position:absolute;width:7.4%;aspect-ratio:60/84;transform:translate(-50%,-54%);transition:left .8s,top .8s;z-index:2}
 .bulb{display:inline-block;vertical-align:middle;flex:none;color:var(--c)}
@@ -254,7 +254,7 @@ h1{text-shadow:0 2px 0 #7a0f24,0 0 24px #ffd36a99}
 /* --- PINO: tablero sin marco, adornos como fichas, foco de inicio que prende y apaga --- */
 #wrap{border:none;box-shadow:none;background:none;border-radius:0}
 #board{container-type:inline-size}
-#board img{filter:none;height:auto!important}
+#board img{filter:none}
 .tk{width:8.6%;aspect-ratio:1;transform:translate(-50%,-50%)}
 .orn{display:inline-block}
 .orn img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 4%;animation:swing 2.8s ease-in-out infinite alternate;filter:drop-shadow(0 0 4px var(--c)) drop-shadow(0 2px 3px #000a)}
@@ -923,7 +923,7 @@ function boardHTML(){
   const marks=`${STAR_HTML()}<div class="startglow" style="left:${st[0]}%;top:${st[1]}%"></div>`
     +`<div class="lbl go" style="left:${go[0]+26}%;top:${go[1]}%">⭐ ${tr("goalLbl")}</div><div class="lbl st" style="left:${st[0]}%;top:${st[1]+5.8}%">${tr("startLbl")}</div>`;
   const dest=S.estado.mover?(()=>{const m=S.estado.mover,d=cell(m.eq,m.to),mine=role==="equipo"&&eq()[m.eq]&&eq()[m.eq].id===CID;return `<div class="dest${mine?" tap":""}" ${mine?'onclick="finMove()"':""} style="left:${d[0]}%;top:${d[1]}%"></div>`})():"";
-  return `<div id="wrap"${zoom?' style="max-height:80vh"':""}><div id="board" style="width:${zoom?200:100}%"><img src="${BOARD_URL}" alt="Board" width="${TW}" height="${TH}">${marks}${sp}${tk}${dest}</div></div>
+  return `<div id="wrap"${zoom?' style="max-height:80vh"':""}><div id="board" style="width:${zoom?200:100}%"><img src="${BOARD_URL}" alt="Board">${marks}${sp}${tk}${dest}</div></div>
   <div class="row" id="zoomRow"><button class="s" onclick="zoom=!zoom;zoomFocus=zoom;draw(true)">🔍 ${zoom?tr("zoomOut"):tr("zoomIn")}</button></div>`;
 }
 function focusTok(){const w=document.getElementById("wrap"),k=document.getElementById("mytk")||document.querySelector(".tk.tkon")||document.querySelector(".tk");if(!w||!k)return;
@@ -1116,7 +1116,7 @@ function draw(force){
   if(dragging)return;
   const s=JSON.stringify(S); if(!force&&s===sig)return; sig=s;
   if(!room){qfullSync();home();return;}
-  const keep=document.getElementById("wrap"); const sx=keep?keep.scrollLeft:0, sy=keep?keep.scrollTop:0; const pgX=window.scrollX, pgY=window.scrollY;
+  const keep=document.getElementById("wrap"); const sx=keep?keep.scrollLeft:0, sy=keep?keep.scrollTop:0; const pgX=window.scrollX, pgY=window.scrollY; app.style.minHeight=app.offsetHeight+"px";
   if(!S||!S.estado){app.innerHTML=tr("loading");return;}
   const rl=(S.estado&&S.estado.lang)||S.lang; // idioma que fijó el juez
   if(rl&&LANGS[rl]&&rl!==lastRemoteLang){lastRemoteLang=rl;if(rl!==LANG)applyLang(rl)}
@@ -1157,7 +1157,13 @@ function draw(force){
     }
   }
   app.innerHTML=h;
-  const w=document.getElementById("wrap"); if(w){w.scrollLeft=sx;w.scrollTop=sy;} window.scrollTo(pgX,pgY); if(zoomFocus){zoomFocus=false;focusTok()}
+  const w=document.getElementById("wrap"); if(w){w.scrollLeft=sx;w.scrollTop=sy;} window.scrollTo(pgX,pgY);
+  { /* el árbol no se mueve: se mantiene la altura de la página hasta que la imagen nueva cargue, y se restaura el scroll */
+    let done=false;const rel=()=>{if(done)return;done=true;app.style.minHeight="";const w2=document.getElementById("wrap");if(w2){w2.scrollLeft=sx;w2.scrollTop=sy}window.scrollTo(pgX,pgY)};
+    const im=document.querySelector("#board img");
+    if(im&&!im.complete){im.addEventListener("load",rel,{once:true});im.addEventListener("error",rel,{once:true});setTimeout(rel,1500)}else rel();
+  }
+  if(zoomFocus){zoomFocus=false;focusTok()}
   if(role==="juez")qr();
   efectoToast(E);diceSync(E);initDrag();celebrar(E);tmrTick();qfullSync();
   if(role==="equipo"&&E.mover&&eq()[E.mover.eq]&&eq()[E.mover.eq].id===CID){const k=E.mover.eq+":"+E.mover.to;if(moveScrollKey!==k){moveScrollKey=k}}else if(!E.mover)moveScrollKey="";
