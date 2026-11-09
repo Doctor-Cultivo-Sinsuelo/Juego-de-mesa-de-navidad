@@ -923,7 +923,7 @@ function boardHTML(){
   const marks=`${STAR_HTML()}<div class="startglow" style="left:${st[0]}%;top:${st[1]}%"></div>`
     +`<div class="lbl go" style="left:${go[0]+26}%;top:${go[1]}%">⭐ ${tr("goalLbl")}</div><div class="lbl st" style="left:${st[0]}%;top:${st[1]+5.8}%">${tr("startLbl")}</div>`;
   const dest=S.estado.mover?(()=>{const m=S.estado.mover,d=cell(m.eq,m.to),mine=role==="equipo"&&eq()[m.eq]&&eq()[m.eq].id===CID;return `<div class="dest${mine?" tap":""}" ${mine?'onclick="finMove()"':""} style="left:${d[0]}%;top:${d[1]}%"></div>`})():"";
-  return `<div id="wrap"${zoom?' style="max-height:80vh"':""}><div id="board" style="width:${zoom?200:100}%"><img src="${BOARD_URL}" alt="Board">${marks}${sp}${tk}${dest}</div></div>
+  return `<div id="wrap"${zoom?' style="max-height:80vh"':""}><div id="board" style="width:${zoom?200:100}%"><img src="${BOARD_URL}" alt="Board" width="${TW}" height="${TH}">${marks}${sp}${tk}${dest}</div></div>
   <div class="row" id="zoomRow"><button class="s" onclick="zoom=!zoom;zoomFocus=zoom;draw(true)">🔍 ${zoom?tr("zoomOut"):tr("zoomIn")}</button></div>`;
 }
 function focusTok(){const w=document.getElementById("wrap"),k=document.getElementById("mytk")||document.querySelector(".tk.tkon")||document.querySelector(".tk");if(!w||!k)return;
@@ -1116,7 +1116,7 @@ function draw(force){
   if(dragging)return;
   const s=JSON.stringify(S); if(!force&&s===sig)return; sig=s;
   if(!room){qfullSync();home();return;}
-  const keep=document.getElementById("wrap"); const sx=keep?keep.scrollLeft:0, sy=keep?keep.scrollTop:0;
+  const keep=document.getElementById("wrap"); const sx=keep?keep.scrollLeft:0, sy=keep?keep.scrollTop:0; const pgX=window.scrollX, pgY=window.scrollY;
   if(!S||!S.estado){app.innerHTML=tr("loading");return;}
   const rl=(S.estado&&S.estado.lang)||S.lang; // idioma que fijó el juez
   if(rl&&LANGS[rl]&&rl!==lastRemoteLang){lastRemoteLang=rl;if(rl!==LANG)applyLang(rl)}
@@ -1157,7 +1157,7 @@ function draw(force){
     }
   }
   app.innerHTML=h;
-  const w=document.getElementById("wrap"); if(w){w.scrollLeft=sx;w.scrollTop=sy;} if(zoomFocus){zoomFocus=false;focusTok()}
+  const w=document.getElementById("wrap"); if(w){w.scrollLeft=sx;w.scrollTop=sy;} window.scrollTo(pgX,pgY); if(zoomFocus){zoomFocus=false;focusTok()}
   if(role==="juez")qr();
   efectoToast(E);diceSync(E);initDrag();celebrar(E);tmrTick();qfullSync();
   if(role==="equipo"&&E.mover&&eq()[E.mover.eq]&&eq()[E.mover.eq].id===CID){const k=E.mover.eq+":"+E.mover.to;if(moveScrollKey!==k){moveScrollKey=k}}else if(!E.mover)moveScrollKey="";
